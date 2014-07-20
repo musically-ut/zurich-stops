@@ -1,6 +1,7 @@
 svg {
-    display: block;
-    margin: auto;
+    display : block;
+    margin  : auto;
+    border  : inset grey 1px;
 }
 
 path {

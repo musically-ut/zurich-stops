@@ -1,6 +1,6 @@
 queue()
   .defer(d3.json, 'stops.topo.json')
-  .defer(d3.json, 'zurich-city.topo.2.json')
+  .defer(d3.json, 'zurich-city.topo.json')
   .await(function (err, zhStops, zhCity) {
 
     // Prepare data
@@ -68,11 +68,11 @@ queue()
     var width  = 960,
         height = 480;
 
-
     // Root element
     var svg = d3.select('body').append('svg')
                 .attr('width', width)
-                .attr('height', height);
+                .attr('height', height)
+                .attr('viewBox', '0 0 ' + width + ' ' + height);
 
     // The projection to use
     var projection = d3.geo.mercator()
