@@ -134,7 +134,16 @@ queue()
 
     var _uniqueCoords = {};
     var uniqueStops = stopsWithinCityBounds.filter(function (d) {
-        var key = d.geometry.coordinates.join('##');
+        // Use this key to exclude only the points with exactly the same
+        // coordinates. Some stops which have the same name have slightly
+        // different coordinates (e.g. bus and tram stops at the same place).
+        //
+        // var key = d.geometry.coordinates.join('##');
+
+        // This key uniquely picks the coordinates of the first stop which
+        // bears a name. Ideally, we would want to save the position of all the
+        // stops and then take their centeroid as the proper voronoi point.
+        var key = d.properties.stopName;
         if (_uniqueCoords.hasOwnProperty(key)) {
             return false;
         } else {
