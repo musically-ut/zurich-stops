@@ -26,6 +26,16 @@ html, body {
                  white  0px -2px 1px;
 }
 
+#help-message {
+    position   : fixed;
+    top        : 0.25em;
+    right      : 0.25em;
+
+    text-align : right;
+    color      : #555;
+    cursor     : pointer;
+}
+
 svg {
     display : block;
     width   : 100%;

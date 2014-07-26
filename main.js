@@ -74,7 +74,16 @@ queue()
                 .attr('viewBox', '0 0 ' + width + ' ' + height);
 
     var stopName = d3.select('body').append('span')
-                        .attr('id', 'stop-name');
+                        .attr('id', 'stop-name')
+
+    d3.select('body').append('span')
+        .attr('id', 'help-message')
+        .text('Use mouse to zoom/pan.')
+        .on('click', function () {
+            // Hide the message when clicked.
+            d3.select(this)
+                .style('display', 'none');
+        });
 
     var zoomableG = svg.append('g');
 
