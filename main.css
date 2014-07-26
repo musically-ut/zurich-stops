@@ -3,6 +3,7 @@ html, body {
     height      : 100%;
     margin      : 0;
     font-family : 'Raleway', sans-serif;
+    color       : #322;
 }
 
 #loading-message {
@@ -13,12 +14,16 @@ html, body {
 }
 
 #stop-name {
-    position  : fixed;
-    bottom    : 2em;
-    right     : 1em;
+    position   : fixed;
+    bottom     : 2em;
+    right      : 1em;
 
-    font-size : 2em;
-    text-align: right;
+    font-size  : 2em;
+    text-align : right;
+    text-shadow: white  2px  0px 1px,
+                 white  0px  2px 1px,
+                 white -2px  0px 1px,
+                 white  0px -2px 1px;
 }
 
 svg {
@@ -68,7 +73,7 @@ path.voronoi-polygon:hover {
     top: 0;
     left: 0;
     height: 2px;
-  
+
     -webkit-transition: width 1s;
     -moz-transition: width 1s;
     -o-transition: width 1s;
