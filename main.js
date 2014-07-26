@@ -73,6 +73,9 @@ queue()
     var svg = d3.select('body').append('svg')
                 .attr('viewBox', '0 0 ' + width + ' ' + height);
 
+    var stopName = d3.select('body').append('span')
+                        .attr('id', 'stop-name');
+
     var zoomableG = svg.append('g');
 
     // The projection to use
@@ -85,7 +88,7 @@ queue()
     var pathGenerator = d3.geo.path()
                             .projection(projection)
                             // Make the dots small
-                            .pointRadius(1.5);
+                            .pointRadius(2);
 
 
     // Draw the state boundaries
@@ -158,6 +161,10 @@ queue()
         .classed('voronoi-polygon', true)
         .attr('d', function (polygon, idx) {
             return "M" + polygon.join('L') + 'Z';
+        })
+        .on('mouseover', function (d, i) {
+            var stop = uniqueStops[i];
+            stopName.text(stop.properties.stopName);
         });
 
     // Add interaction

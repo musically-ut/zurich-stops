@@ -12,6 +12,15 @@ html, body {
     text-align : center;
 }
 
+#stop-name {
+    position  : fixed;
+    bottom    : 2em;
+    right     : 1em;
+
+    font-size : 2em;
+    text-align: right;
+}
+
 svg {
     display : block;
     width   : 100%;
@@ -25,7 +34,7 @@ path {
 path.stop {
     stroke           : none;
     fill             : springgreen;
-    opacity          : 0.7;
+    opacity          : 0.8;
 }
 
 path.region {
@@ -34,10 +43,10 @@ path.region {
 }
 
 path.boundary {
-    stroke           : darkblue;
+    stroke           : #777;
     stroke-width     : 3px;
     stroke-linejoin  : round;
-    opacity          : 0.5;
+    opacity          : 0.3;
 }
 
 path.voronoi-polygon {
@@ -59,7 +68,7 @@ path.voronoi-polygon:hover {
     top: 0;
     left: 0;
     height: 2px;
-
+  
     -webkit-transition: width 1s;
     -moz-transition: width 1s;
     -o-transition: width 1s;
