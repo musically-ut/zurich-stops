@@ -63,31 +63,55 @@ queue()
     // Remove the loading message
     d3.select('#loading-message').remove();
 
-
     // Dimensions
-    var width  = 960,
-        height = 480;
+    var width  = 1000,
+        height = 1000,
+        transitionDuration = 750;
+
 
     // Root element
     var svg = d3.select('body').append('svg')
-                .attr('width', width)
-                .attr('height', height)
                 .attr('viewBox', '0 0 ' + width + ' ' + height);
+
+    var zoomableG = svg.append('g');
 
     // The projection to use
     var projection = d3.geo.mercator()
                         .center([(xMin + xMax) / 2, (yMin + yMax) / 2])
                         .translate([width / 2, height / 2])
-                        .scale(110000);
+                        .scale(250000);
 
     // The path generator
     var pathGenerator = d3.geo.path()
                             .projection(projection)
-                            // Make the dots really small
-                            .pointRadius(1);
+                            // Make the dots small
+                            .pointRadius(1.5);
+
+
+    // Draw the state boundaries
+    // ///////////////////////////////////////////////////////////////////////
+
+    var regionsG = zoomableG.append('g')
+                    .classed('regions', true);
+
+    // Draw the regions
+    regionsG.selectAll('path.region')
+        .data(topojson.feature(zhCity, zhCity.objects['zurich-city']).features)
+      .enter().append('path')
+        .classed('region', true)
+        .attr('d', pathGenerator);
+
+    // Draw their boundaries
+    regionsG.append('path')
+        .datum(topojson.mesh(zhCity, zhCity.objects['zurich-city']))
+        .classed('boundary', true)
+        .attr('d', pathGenerator);
+
+    // Stops
+    // ///////////////////////////////////////////////////////////////////////
 
     // Draw the stops, but only those which are inside the city's bounding box.
-    var stopsG = svg.append('g')
+    var stopsG = zoomableG.append('g')
                     .classed('stops', true);
 
     var stopsWithinCityBounds = stopsData.filter(function (sd) {
@@ -102,35 +126,8 @@ queue()
         .attr('data-stop-name', function (d) { return d.properties.stopName; })
         .attr('d', pathGenerator);
 
-    // Draw the overall boundary underneath the states and the stops to be
-    // least intrusive for interaction.
-    svg.append('path')
-        .datum(cityData)
-        .classed('boundary', true)
-        .attr('d', pathGenerator);
-
-    // Rotate through the entire spectrum of colors available.
-    var colors = d3.scale.category20();
-
-    var ids = zhCity.objects['zurich-city']
-                .geometries.map(function (d) { return d.id; });
-
-    var regionsG = svg.append('g')
-                    .classed('regions', true);
-
-    // Draw boundaries of each Zurich region
-    ids.forEach(function (id, idx) {
-        regionsG.append('path')
-            .datum(topojson.mesh(zhCity, zhCity.objects['zurich-city'],
-                    // Draw the boundary if the current region lies on any
-                    // side. This probably can be made more efficient.
-                    function (a, b) { return a.id === id || b.id === id; }))
-            .classed('region', true)
-            .attr('data-name', function (d) { return id; })
-            .attr('stroke', colors(idx))
-            .attr('title', function (d) { return id; })
-            .attr('d', pathGenerator);
-    });
+    // Voronoi tesselation
+    // ///////////////////////////////////////////////////////////////////////
 
     var _uniqueCoords = {};
     var uniqueStops = stopsWithinCityBounds.filter(function (d) {
@@ -150,7 +147,7 @@ queue()
 
     var voronoiPolygons = d3.geom.voronoi(voronoiPts);
 
-    var voronoiG = svg.append('g')
+    var voronoiG = zoomableG.append('g')
                     .classed('voronoi-polygons', true);
 
     // Draw the vornoi polygons
@@ -163,6 +160,33 @@ queue()
             return "M" + polygon.join('L') + 'Z';
         });
 
+    // Add interaction
+    // ///////////////////////////////////////////////////////////////////////
+
+
+    // Zoom behaviour
+    function zoomed() {
+        regionsG.selectAll('path.boundary')
+            .style('stroke-width', 3 / d3.event.scale + 'px');
+
+        voronoiG.selectAll('path.voronoi-polygon')
+            .style('stroke-width', 3 / d3.event.scale + 'px');
+
+        zoomableG.attr(
+            'transform'
+          , 'translate(' + d3.event.translate + ')'
+            + 'scale(' + d3.event.scale + ')'
+        );
+    }
+    var zoom = d3.behavior.zoom()
+                .translate([0, 0])
+                .scale(1)
+                .scaleExtent([1, 8])
+                .on('zoom', zoomed);
+
+    svg
+      .call(zoom)
+      .call(zoom.event);
 
     window.zhStops = zhStops;
     window.zhCity = zhCity;
