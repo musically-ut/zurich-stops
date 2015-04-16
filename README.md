@@ -1,5 +1,7 @@
 # Zurich Stops
 
+**Visualisation:** http://musically-ut.github.io/zurich-stops/
+
 This is the data-set which illustrates the Zurich map and the Zurich stops
 data-sets as well as illustrates the use of Geometric projections with [D3](https://www.d3js.org).
 
