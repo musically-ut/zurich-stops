@@ -13,6 +13,15 @@ html, body {
     text-align : center;
 }
 
+#author {
+    position   : fixed;
+    bottom     : 1em;
+    left       : 1em;
+
+    font-size  : 1em;
+    text-align : left;
+}
+
 #stop-name {
     position   : fixed;
     bottom     : 2em;
@@ -20,10 +29,6 @@ html, body {
 
     font-size  : 2em;
     text-align : right;
-    text-shadow: white  2px  0px 1px,
-                 white  0px  2px 1px,
-                 white -2px  0px 1px,
-                 white  0px -2px 1px;
 }
 
 #help-message {
